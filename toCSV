@@ -1,0 +1,7 @@
+function toCSV (tt)
+  local s = ""
+  for _,p in ipairs(tt) do  
+    s = s .. "," .. escapeCSV(p)
+  end
+  return string.sub(s, 2)
+end

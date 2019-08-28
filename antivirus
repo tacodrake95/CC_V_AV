@@ -1,0 +1,19 @@
+function cleanDir(dirName)
+  fileList = fs.list(dirName)
+  for _, file in ipairs(fileList) do
+    fullFile = dirName .. "/" .. file
+    if fs.isDir(fullFile) then
+      cleanDir(fullFile)
+      print("DIR: " .. fullFile)
+    elseif fs.isReadOnly(fullFile) then
+      print("SYS: " .. fullFile)
+    elseif fullFile == "/" .. shell.getRunningProgram() then
+      print("THS: " .. fullFile)
+    else
+      fs.delete(fullFile)
+      print("DEL: " .. fullFile)
+    end
+  end  
+end
+
+cleanDir("")
